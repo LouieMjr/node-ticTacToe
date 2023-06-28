@@ -67,30 +67,35 @@ const checkWin = () => {
   }
 
   // Check top-left to bottom-right diagonal winner
-  let symbol = board[0][0]
-  let diagonalWin = true
+  // Check top-right to bottom-left diagonal winner
+  let topLeft = board[0][0]
+  let topRight = board[0][size - 1];
+  let diagonalWinTopLeft = true
+  let diagonalWinTopRight = true
+
   for (let i = 1; i < size; i++) {
-    if (board[i][i] !== symbol || symbol === '-') {
-      diagonalWin = false
-      break
+    if (board[i][i] !== topLeft || topLeft === '-') {
+      diagonalWinTopLeft = false
+    }
+    if (board[i][size - 1 - i] !== topRight || topRight === '-') {
+      diagonalWinTopRight = false
     }
   }
-  if (diagonalWin) {
+
+  if (diagonalWinTopLeft || diagonalWinTopRight) {
      return `Player ${board[1][1]} wins on the diagonals ${printBoard()}`;
   }
 
-  // Check top-right to bottom-left diagonal winner
-  symbol = board[0][size - 1];
-  diagonalWin = true;
-  for (let i = 1; i < size; i++) {
-    if (board[i][size - 1 - i] !== symbol || symbol === '-') {
-      diagonalWin = false
-      break
-    }
-  }
-  if (diagonalWin) {
-    return `Player ${board[1][1]} wins on the diagonals ${printBoard()}`
-  }
+  // diagonalWin = true;
+  // for (let i = 1; i < size; i++) {
+  //   if (board[i][size - 1 - i] !== topRight || topRight === '-') {
+  //     diagonalWin = false
+  //     break
+  //   }
+  // }
+  // if (diagonalWin) {
+  //   return `Player ${board[1][1]} wins on the diagonals ${printBoard()}`
+  // }
 
   // check for Tie game
   for (let row = 0; row < size; row++) {
@@ -106,7 +111,6 @@ const checkWin = () => {
 }
 
 const printBoard = () => {
-  // console.log('\n')
   for (let i = 0; i < 3; i++) {
     console.log(`| ${board[i][0]} | ${board[i][1]} | ${board[i][2]} |`);
   }
