@@ -41,25 +41,20 @@ const validBoardSpace = (letter) => {
   
 
   
-  // SECTION TO CHECK IF BOARD SPACE IS AVAIABLE -- Could simplify this more
-  if (letter === 'X' && board[x][y] !== 'X' && board[x][y] !== 'O') {
-    board[x][y] = letter;
-
-  } else if (letter === 'O' && board[x][y] !== 'X' && board[x][y] !== 'O') {
-    board[x][y] = letter;
-
-  } else if (board[x][y] === 'X' || board[x][y] === 'O') {
-    console.log('None of those work. Pick a different combination... ');
+  // SECTION TO CHECK IF BOARD SPACE IS AVAIABLE
+   if (board[x][y] === 'X' || board[x][y] === 'O') {
+    console.log('Spot already taken. Pick a different combination... ');
     return validBoardSpace(letter);
-  }
+   }
   
+   if (board[x][y] !== 'X' && board[x][y] !== 'O') board[x][y] = letter;
   
   return checkWin();
 }
 
 // CHECK FOR A TRIO OF X's OR O's /// CHECK IF ANY SPACE ON BOARD IS LEFT
 const checkWin = () => {
-  // Rows loop
+  // Rows loopd
   for (let x = 0; x < 3; x++) {
     // CHECK ROWS FOR WIN
     if (board[x][0] === 'X' && board[x][1] === 'X' && board[x][2] === 'X') return `Player-X wins on X axis ${printBoard()}`
