@@ -66,10 +66,37 @@ const checkWin = () => {
       rowWin = true
       colWin = true
     }
-    if(rowWin && board[x][0] !== '-') return `Player ${board[x][0]} Wins on Row ${x}! ${printBoard()} `;
-    if(colWin && board[0][x] !== '-') return `Player ${board[0][x]} Wins on Column ${x}! ${printBoard()} `;
+    if(rowWin && board[x][0] !== '-') return `Player ${board[x][0]} Wins on Row ${x}! ${printBoard()}`;
+    if(colWin && board[0][x] !== '-') return `Player ${board[0][x]} Wins on Column ${x}! ${printBoard()}`
+    
+    
   }
 
+  let symbol = board[0][0];
+  let diagonalWin = true;
+
+  for (let i = 1; i < size; i++) {
+    if (board[i][i] !== symbol || symbol === '-') {
+      diagonalWin = false;
+      break;
+    }
+  }
+  if (diagonalWin) {
+     return `Player ${board[1][1]} wins on the diagonals ${printBoard()}`;
+  }
+
+    // Check top-right to bottom-left diagonal
+    symbol = board[0][size - 1];
+    diagonalWin = true;
+    for (let i = 1; i < size; i++) {
+      if (board[i][size - 1 - i] !== symbol || symbol === '-') {
+        diagonalWin = false;
+        break;
+      }
+    }
+    if (diagonalWin) {
+      return `Player ${board[1][1]} wins on the diagonals ${printBoard()}`;
+    }
 
   return playGame();
   
