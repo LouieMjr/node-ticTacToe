@@ -11,14 +11,14 @@ const board = [
 
 // CHECK FOR VALID LETTER INPUT
 const validPick = () => {
-  let pick = readlineSync.question('Enter Pick.. X or O: ')
+  let pick = readlineSync.question('Pick.. X or O: ')
   pick = pick.toUpperCase();
   
   if (pick !== 'X' && pick !== 'O') {
-    console.log('Not a valid selection.');
-    return validPick();
+    console.log('Not a valid pick. Try Again!')
+    return validPick()
   }
-  
+    
   return validBoardSpace(pick);
 }
 
@@ -54,88 +54,59 @@ const validBoardSpace = (letter) => {
 
 // CHECK FOR A TRIO OF X's OR O's /// CHECK IF ANY SPACE ON BOARD IS LEFT
 const checkWin = () => {
-  const size = board.length;
-  let rowWin = false
-  let colWin = false
-  
-  for (let x = 0; x < size; x++) {
+  const size = board.length
+
+  // check for Row or Col winner
+  for (let i = 0; i < size; i++) {
     if (
-      (board[x][0] !== '-' && board[x][0] === board[x][1] && board[x][0] === board[x][2]) ||
-      (board[0][x] !== '-' && board[0][x] === board[1][x] && board[0][x] === board[2][x])
+      (board[i][0] !== '-' && board[i][0] === board[i][1] && board[i][0] === board[i][2]) ||
+      (board[0][i] !== '-' && board[0][i] === board[1][i] && board[0][i] === board[2][i])
     ) {
-      rowWin = true
-      colWin = true
+      return `Player ${board[i][i]} Wins! ${printBoard()}`;
     }
-    if(rowWin && board[x][0] !== '-') return `Player ${board[x][0]} Wins on Row ${x}! ${printBoard()}`;
-    if(colWin && board[0][x] !== '-') return `Player ${board[0][x]} Wins on Column ${x}! ${printBoard()}`
-    
-    
   }
 
-  let symbol = board[0][0];
-  let diagonalWin = true;
-
+  // Check top-left to bottom-right diagonal winner
+  let symbol = board[0][0]
+  let diagonalWin = true
   for (let i = 1; i < size; i++) {
     if (board[i][i] !== symbol || symbol === '-') {
-      diagonalWin = false;
-      break;
+      diagonalWin = false
+      break
     }
   }
   if (diagonalWin) {
      return `Player ${board[1][1]} wins on the diagonals ${printBoard()}`;
   }
 
-    // Check top-right to bottom-left diagonal
-    symbol = board[0][size - 1];
-    diagonalWin = true;
-    for (let i = 1; i < size; i++) {
-      if (board[i][size - 1 - i] !== symbol || symbol === '-') {
-        diagonalWin = false;
-        break;
+  // Check top-right to bottom-left diagonal winner
+  symbol = board[0][size - 1];
+  diagonalWin = true;
+  for (let i = 1; i < size; i++) {
+    if (board[i][size - 1 - i] !== symbol || symbol === '-') {
+      diagonalWin = false
+      break
+    }
+  }
+  if (diagonalWin) {
+    return `Player ${board[1][1]} wins on the diagonals ${printBoard()}`
+  }
+
+  // check for Tie game
+  for (let row = 0; row < size; row++) {
+    for (let col = 0; col < size; col++) {
+      if (board[row][col] === '-') {
+        console.log(printBoard())
+        return playGame()
       }
     }
-    if (diagonalWin) {
-      return `Player ${board[1][1]} wins on the diagonals ${printBoard()}`;
-    }
+  }
 
-  return playGame();
-  
-  
-  
-  // // Rows loop
-  // for (let x = 0; x < 3; x++) {
-  //   // CHECK ROWS FOR WIN
-  //   if (board[x][0] === 'X' && board[x][1] === 'X' && board[x][2] === 'X') return `Player-X wins on X axis ${printBoard()}`
-
-  //   if (board[x][0] === 'O' && board[x][1] === 'O' && board[x][2] === 'O') return `Player-O wins on X axis ${printBoard()}`
-    
-  //   // Columns loop
-  //   for (let y = 0; y < 3; y++) {
-  //     // CHECK COLUMNS FOR WIN
-  //     if (board[0][y] === 'X' && board[1][y] === 'X' && board[2][y] === 'X') return `Player-X wins on Y axis ${printBoard()}`
-
-  //     if (board[0][y] === 'O' && board[1][y] === 'O' && board[2][y] === 'O') return `Player-O wins on Y axis ${printBoard()}`
-      
-      
-  //     // CHECK DIAGONALLY FROM TOP LEFT TO BOTTOM RIGHT
-  //     if (board[0][0] === 'X' && board[1][1] === 'X' && board[2][2] === 'X') return `Player-X wins on Diagonally ${printBoard()}`
-
-  //     if (board[0][0] === 'O' && board[1][1] === 'O' && board[2][2] === 'O') return `Player-O wins on Diagonally ${printBoard()}`
-      
-  //     // CHECK DIAGONALLY FROM TOP RIGHT to BOTTOM LEFT
-  //     if (board[0][2] === 'X' && board[1][1] === 'X' && board[2][0] === 'X') return `Player-X wins on Diagonally ${printBoard()}`
-      
-  //     if (board[0][2] === 'O' && board[1][1] === 'O' && board[2][0] === 'O') return `Player-O wins on Diagonally ${printBoard()}`
-      
-  //     // console.log(`checking for open space on board ${board[x][y]}` )
-  //     if (board[x][y] === '-') return playGame();
-  //   }
-  // }
-  // console.log(printBoard());
-  // return 'NO SPACES LEFT, TIE GAME';
+  return `No More Spaces Left. TIE GAME! ${printBoard()}`
 }
 
 const printBoard = () => {
+  // console.log('\n')
   for (let i = 0; i < 3; i++) {
     console.log(`| ${board[i][0]} | ${board[i][1]} | ${board[i][2]} |`);
   }
@@ -143,13 +114,13 @@ const printBoard = () => {
 }
 
 function playGame() {
-  if(!runOnce) console.log('Starting...', "\n");
+  if(runOnce !== true) console.log('Starting...');
   runOnce = true;
 
-  console.log(printBoard());
-  return validPick();
+  // console.log(printBoard());
+  return validPick()
 }
 
-console.log(playGame());
+console.log(playGame())
 
 
