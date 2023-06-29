@@ -7,7 +7,7 @@ import readlineSync from 'readline-sync';
   //   ['-', '-', '-']
   // ];
   
-  let runOnce = false;
+let runOnce = false;
 
 // CHECK FOR VALID LETTER INPUT
 const validPick = (board) => {
@@ -119,9 +119,14 @@ function startGame(board) {
 }
 
 console.log(startGame([
-    ['-', '-', '-'],
-    ['-', '-', '-'],
-    ['-', '-', '-']
-  ]))
+  ['-', '-', '-'],
+  ['-', '-', '-'],
+  ['-', '-', '-']
+]))
 
-
+module.exports = {
+  startGame,
+  validPick,
+  validBoardSpace,
+  checkWin
+}
