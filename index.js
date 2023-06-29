@@ -1,29 +1,29 @@
 import readlineSync from 'readline-sync';
 // import scanf from 'scanf';
-let runOnce = false;
 
-const board = [
-  ['-', '-', '-'],
-  ['-', '-', '-'],
-  ['-', '-', '-']
-];
-
+// const board = [
+  //   ['-', '-', '-'],
+  //   ['-', '-', '-'],
+  //   ['-', '-', '-']
+  // ];
+  
+  let runOnce = false;
 
 // CHECK FOR VALID LETTER INPUT
-const validPick = () => {
+const validPick = (board) => {
   let pick = readlineSync.question('Pick.. X or O: ')
   pick = pick.toUpperCase();
   
   if (pick !== 'X' && pick !== 'O') {
     console.log('Not a valid pick. Try Again!')
-    return validPick()
+    return validPick(board)
   }
     
-  return validBoardSpace(pick);
+  return validBoardSpace(pick, board);
 }
 
 // CHECK IF BOARD SPACE IS VALID AND AVAIABLE TO CHOOSE
-const validBoardSpace = (letter) => {
+const validBoardSpace = (letter, board) => {
   let turnIntoArray = readlineSync.question('Pick 0-2 for a Row and 0-2 for a Column: ');
   turnIntoArray = turnIntoArray.split('');
 
@@ -32,11 +32,11 @@ const validBoardSpace = (letter) => {
 
   if (x !== 0 && x !== 1 && x !== 2) {
     console.log('Invalid row seclection');
-    return validBoardSpace(letter);
+    return validBoardSpace(letter, board);
   }
   if (y !== 0 && y !== 1 && y !== 2) {
     console.log('Invalid column selection');
-    return validBoardSpace(letter);
+    return validBoardSpace(letter, board);
   }
   
 
@@ -44,16 +44,16 @@ const validBoardSpace = (letter) => {
   // SECTION TO CHECK IF BOARD SPACE IS AVAIABLE
    if (board[x][y] === 'X' || board[x][y] === 'O') {
     console.log('Spot already taken. Pick a different combination... ');
-    return validBoardSpace(letter);
+    return validBoardSpace(letter, board);
    }
   
    if (board[x][y] !== 'X' && board[x][y] !== 'O') board[x][y] = letter;
   
-  return checkWin();
+  return checkWin(board);
 }
 
 // CHECK FOR A TRIO OF X's OR O's /// CHECK IF ANY SPACE ON BOARD IS LEFT
-const checkWin = () => {
+const checkWin = (board) => {
   const size = board.length
 
   // check for Row or Col winner
@@ -62,7 +62,7 @@ const checkWin = () => {
       (board[i][0] !== '-' && board[i][0] === board[i][1] && board[i][0] === board[i][2]) ||
       (board[0][i] !== '-' && board[0][i] === board[1][i] && board[0][i] === board[2][i])
     ) {
-      return `Player ${board[i][i]} Wins! ${printBoard()}`;
+      return `Player ${board[i][i]} Wins! ${printBoard(board)}`;
     }
   }
 
@@ -83,48 +83,45 @@ const checkWin = () => {
   }
 
   if (diagonalWinTopLeft || diagonalWinTopRight) {
-     return `Player ${board[1][1]} wins on the diagonals ${printBoard()}`;
+     return `Player ${board[1][1]} wins on the diagonals ${printBoard(board)}`;
   }
 
-  // diagonalWin = true;
-  // for (let i = 1; i < size; i++) {
-  //   if (board[i][size - 1 - i] !== topRight || topRight === '-') {
-  //     diagonalWin = false
-  //     break
-  //   }
-  // }
-  // if (diagonalWin) {
-  //   return `Player ${board[1][1]} wins on the diagonals ${printBoard()}`
-  // }
 
   // check for Tie game
   for (let row = 0; row < size; row++) {
     for (let col = 0; col < size; col++) {
       if (board[row][col] === '-') {
-        console.log(printBoard())
-        return playGame()
+        console.log(printBoard(board))
+        return restartGame(board)
       }
     }
   }
 
-  return `No More Spaces Left. TIE GAME! ${printBoard()}`
+  return `No More Spaces Left. TIE GAME! ${printBoard(board)}`
 }
 
-const printBoard = () => {
+const printBoard = (board) => {
   for (let i = 0; i < 3; i++) {
     console.log(`| ${board[i][0]} | ${board[i][1]} | ${board[i][2]} |`);
   }
   return ''
 }
 
-function playGame() {
+function restartGame(board) {
+  return validPick(board)
+}
+
+function startGame(board) {
   if(runOnce !== true) console.log('Starting...');
   runOnce = true;
 
-  // console.log(printBoard());
-  return validPick()
+  return validPick(board)
 }
 
-console.log(playGame())
+console.log(startGame([
+    ['-', '-', '-'],
+    ['-', '-', '-'],
+    ['-', '-', '-']
+  ]))
 
 
